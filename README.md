@@ -69,7 +69,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 # Settings
 
-'''
+```
 # the listener interface for the proxy
 INT = 'ifname' 
 # ip address of the listener interface
@@ -84,4 +84,4 @@ DHCP_SRV = '10.x.x.x'
 RELAY_AGENT = '10.x.x.x' 
 # 'Print messages during processing'
 VERBOSE = True 
-'''
+```
