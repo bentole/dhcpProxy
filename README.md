@@ -82,7 +82,7 @@ INT_MAC = '00:01:02:03:04:05'
 GW_MAC = 'aa:aa:bb:bb:cc:dd'	
 # ip address of the dhcp server
 DHCP_SRV = '10.x.x.x' 
-# ip address of the relay agent
+# ip address of the relay agent. this dependency stupidity removed soon..
 RELAY_AGENT = '10.x.x.x' 
 # 'Print messages during processing'
 VERBOSE = True 
