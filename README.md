@@ -31,7 +31,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 		- If not use "yum install " or "apt-get "  to fullfill these dependencies
 
-3. Install scapy. Fret not, Scapy is well-known packet manipulator used by Cisco Systems among others : 
+3. Install scapy. Fret not, Scapy is a well-known packet manipulator used by Cisco Systems among others
 
 		- pip install scapy
 
