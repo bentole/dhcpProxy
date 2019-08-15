@@ -3,15 +3,15 @@ DHCP Proxy For Deleting and Inserting Relayed Option 82 information
 
 # About
 
-In environments where option 82 is needed, the DHCP server must support this option as well, by 
+In environments where option 82 is required, the DHCP server must support this option by 
 returning this information in its offer. If this is omitted the reply will never get back
-to its source as long as the design requires option 82.
+to the client as long as the design requires option 82.
 
-This proxy provides a fix to this by stripping the option 82 information in the request and
-re-inserting it in the offer towards the client.
+This proxy provides a fix by stripping the option 82 information in the request and
+re-inserting it in the offer, meaning the server is oblivious about this information.
 
-The long time solution is to use a DHCP server that supports this option, but this proxy is considered
-a short time solution
+The long time solution is to use a DHCP server that supports this option, but this proxy is feasable
+short time solution
 
 # Installation
 
@@ -20,9 +20,9 @@ a short time solution
 		- Might work in other scenarios as well, but Ye Might Also Be Fecked!
 
 2. Make sure git, python, pip and virtualenv are installed on the platform of choice
-		- If not use "yum install " or "apt-get" to complete these dependencies
+		- If not use "yum install " or "apt-get "  to fullfill these dependencies
 
-3. Install scapy using
+3. Install scapy. Fret not, Scapy is well-known packet manipulator used by Cisco Systems among others : 			
 		- pip install scapy
 
 4. Clone from Github (Private Repository)
