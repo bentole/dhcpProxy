@@ -6,12 +6,12 @@ import time
 listener = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 listener.bind(('0.0.0.0', 67))
 
-interface = 'ens224'
-dhcp_server = '10.210.6.32'
-my_ip = '10.209.0.2'
-my_mac = '00:0c:29:53:60:a8'
-router_mac = '70:0f:6a:b3:f7:3f'
-orig_relay = '10.209.8.1'
+interface = 'the listener interface for the proxy'
+dhcp_server = 'ip address of the dhcp server'
+my_ip = 'ip address of the interface this proxy listens on'
+my_mac = 'mac address of the listener interface'
+router_mac = 'mac address of the default gateway OR dhcp server if on same subnet..'
+orig_relay = 'the ip address of the original relay'
 verbose = 1
 p_tracker = {}
 discover_msg = "Discover mottatt fra relay {}. Forwarder til server {}".format(orig_relay, dhcp_server)
