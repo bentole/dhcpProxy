@@ -13,12 +13,17 @@ re-inserting it in the offer, meaning the server is oblivious of this informatio
 The long time solution is to use a DHCP server that supports this option like Windows 2012 DHCP, but 
 this proxy is a feasable short time solution
 
+This proxy can be used to manipulate other optoins as well, yet as of now it's only for option 82.
+Open an [issue](https://github.com/bentole/dhcpProxy/issues) if you have any thoughts or ideas on how to 
+furthere utilize or improve this proxy
+
 # Caveats
 
 This script is in early development and is highly experimental, yet works as a charm if installed as described.
 A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
 
 Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production just yet :)
+
 
 # Installation
 
