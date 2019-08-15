@@ -7,6 +7,16 @@ import settings as s
 listener = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 listener.bind(('0.0.0.0', 67))
 
+<<<<<<< HEAD
+=======
+interface = 'the listener interface for the proxy'
+dhcp_server = 'ip address of the dhcp server'
+my_ip = 'ip address of the interface this proxy listens on'
+my_mac = 'mac address of the listener interface'
+router_mac = 'mac address of the default gateway OR dhcp server if on same subnet..'
+orig_relay = 'ip address of the relay agent'
+verbose = 1
+>>>>>>> 1e3aac97bc2106fe4a00682243a145a87c968a68
 p_tracker = {}
 discover_msg = "Discover from {}. Relaying to {}".format(s.RELAY_AGENT, s.DHCP_SRV)
 offer_msg =    "Offer from {}. Relaying to {}".format(s.DHCP_SRV, s.RELAY_AGENT)
