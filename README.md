@@ -18,7 +18,7 @@ short time solution
 This script is in early development and is high experimental, yet works as a charm if installed as described.
 A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
 
-Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production environment just yet :)
+Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production just yet :)
 
 # Installation
 
@@ -35,7 +35,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 		- pip install scapy
 
-4. Clone from Github (Private Repository)
+4. Clone from Github
 
 		- git clone https://github.com/bentole/dhcpProxy.git
 
