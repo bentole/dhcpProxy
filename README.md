@@ -22,8 +22,6 @@ a short time solution
 2. Make sure git, python, pip and virtualenv are installed on the platform of choice
 		- If not use "yum install " or "apt-get" to complete these dependencies
 
-3. Install scapy using
-		- pip install scapy
 
 4. Clone from Github (Private Repository)
 		- git clone https://github.com/bentole/dhcpProxy.git
@@ -34,8 +32,34 @@ a short time solution
 6. (Optional) Start the virtual environment
 		- source ENVDIR/bin/activate
 
+3. Install scapy using
+		- pip install scapy
+
 7. Start the proxy
 		- python ./dhcpProxy.py
 
 8. Good luck, Chuck!
+
+# Settings
+
+# the listener interface for the proxy
+INT = 'ens224' 
+
+# ip address of the listener interface
+INT_IP = '10.209.0.2' 
+
+# mac address of the listener interface
+INT_MAC = '00:0c:29:53:60:a8' 
+
+# mac address of the default gateway OR dhcp server if on same subnet..
+GW_MAC = '70:0f:6a:b3:f7:3f'	
+
+# ip address of the dhcp server
+DHCP_SRV = '10.210.6.32' 
+
+# ip address of the relay agent
+RELAY_AGENT = '10.209.8.1' 
+
+# 'Print messages during processing'
+VERBOSE = True 
 
