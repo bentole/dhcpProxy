@@ -38,6 +38,16 @@ short time solution
 
 6. (Optional) Start the virtual environment
 
+# Caveats
+
+This script is in early development and is high experimental, yet works as a charm if installed as described.
+A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
+
+Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into a production environment just yet :)
+
+
+
+
 		- source ENVDIR/bin/activate
 		
 7. Change the variables on top of the script according to your setup
