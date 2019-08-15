@@ -30,40 +30,42 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 1. Install the proxy according to design
 
-		- DHCP Server <-> THIS_PROXY! <-> Relay Agent <-> DHCP Client
-		- Might work in other scenarios as well, but Ye Might Also Be Fecked!
+		DHCP Server <-> THIS_PROXY! <-> Relay Agent <-> DHCP Client
+		Might work in other scenarios as well, but Ye Might Also Be Fecked!
 
 2. Make sure git, python, pip and optionally virtualenv are installed on the platform of choice
 
-		- If not use "yum install " or "apt-get "  to fullfill these dependencies
+		If not use "yum install " or "apt-get "  to fullfill these dependencies
 
 3. Install scapy. Fret not, Scapy is a well-known packet manipulator used by Cisco Systems among others
 
-		- pip install scapy
+		pip install scapy
+		Oh this needs to be done after step 6 if using virtualenv.
+		
 
 4. Clone from Github
 
-		- git clone https://github.com/bentole/dhcpProxy.git
+		git clone https://github.com/bentole/dhcpProxy.git
 
 5. (Optional) Create a virtual environment to run the app
 
-		- virtualenv ENVDIR 
+		virtualenv ENVDIR 
 
 6. (Optional) Start the virtual environment
 
-		- source ENVDIR/bin/activate
+		source ENVDIR/bin/activate
 		
 7. Create a file named settings.py and put it in the same directory as dhcpProxy.py. See Settings below
 
-		- vi settings.py or nano settings.py or whatever
+		vi settings.py or nano settings.py or whatever
 
 8. Start the proxy
 
-		- python ./dhcpProxy.py
+		python ./dhcpProxy.py
 		
 9. Change the relay information from pointing towards the dhcp server to point towards the proxy
 
-		- For Cisco routers : ip helper-address proxy_addr
+		For Cisco routers : ip helper-address proxy_addr
 
 10. Good luck, Chuck!
 
