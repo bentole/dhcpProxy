@@ -12,6 +12,10 @@ discover_msg = "Discover from {}. Relaying to {}".format(s.RELAY_AGENT, s.DHCP_S
 offer_msg =    "Offer from {}. Relaying to {}".format(s.DHCP_SRV, s.RELAY_AGENT)
 unknown_pkt_msg =  "Irrelevant DHCP pkt received, but that's ok"
 no_opt82_msg = "No option 82 found in DHCP header! No worries!"
+opt82_found_msg = "Found option 82! Deleting! Status: {status}"
+opt82_reinsert_msg = "Re-inserting option 82! Status: {status}"
+err_xid_notfound = "Transaction ID not found!"
+
 opt82 = 'relay_agent_Information'
 msg_type = 'message-type'
 
@@ -32,10 +36,10 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 
 	if opt82action and p_tracker[pkt[BOOTP].xid]["opt82"]:
 		if 'delete' in opt82action:
-			log("Found option 82! Deleting! Status: {}".format(delete_dhcp_option(pkt, opt82)), pkt=pkt)
+			log(opt82_found_msg.format(status=delete_dhcp_option(pkt, opt82)), pkt=pkt)
 
 		elif 'insert' in opt82action:
-			log("Re-inserting option 82! Status: {}".format(set_dhcp_option(pkt, opt82, p_tracker[pkt[BOOTP].xid]["opt82"])), pkt=pkt)
+			log(opt82_reinsert_msg.format(status=set_dhcp_option(pkt, opt82, p_tracker[pkt[BOOTP].xid]["opt82"])), pkt=pkt)
 	else:
 		if pkt[BOOTP].op == 1: log(no_opt82_msg, pkt=pkt)
 
@@ -104,7 +108,7 @@ def pkt_receiver(pkt, p_tracker):
 					orig_opt82 = p_tracker[pkt[BOOTP].xid]['opt82']
 
 				else:
-					log("fant ikke s.RELAY_AGENT i pakken. hvorfor?")
+					log(err_xid_notfound)
 				fwd_pkt = change_pkt_info(pkt.copy(),
 								dip=s.RELAY_AGENT,
 								giaddr=s.RELAY_AGENT,
@@ -134,11 +138,7 @@ if __name__=='__main__':
 		print "Status: Ready"
 		while True:
 			time.sleep(10)
-			tracker_cleanup()
-		#dump = sniff(filter=filter, prn=lambda pkt: pkt_receiver(pkt, p_tracker))
-	
+			tracker_cleanup()	
 	except KeyboardInterrupt:
 		t.stop()
 		exit()
-
-
