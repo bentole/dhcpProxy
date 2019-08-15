@@ -1,11 +1,12 @@
 # DHCP PROXY
+
 DHCP Proxy For Deleting and Inserting Relayed Option 82 information
 
 # About
 
-In environments like Cisco SD Access where option 82 is required, the DHCP server must support this option by 
-returning this information in its offer. If this is omitted the reply will never get back
-to the client as long as the design requires option 82.
+In environments like Cisco SD Access where option 82 is required, the DHCP server must support this by 
+returning this information in its replies. If this is omitted the packets will never get back
+to the client if the design relies on it.
 
 This proxy provides a fix by stripping the option 82 information in the request and
 re-inserting it in the offer, meaning the server is oblivious of this information.
@@ -13,13 +14,13 @@ re-inserting it in the offer, meaning the server is oblivious of this informatio
 The long time solution is to use a DHCP server that supports this option like Windows 2012 DHCP, but 
 this proxy is a feasable short time solution
 
-This proxy can be used to manipulate other optoins as well, yet as of now it's only for option 82.
+This proxy can be used to manipulate other options as well, yet as of now it's only for option 82.
 Open an [issue](https://github.com/bentole/dhcpProxy/issues) if you have any thoughts or ideas on how to 
 furthere utilize or improve this proxy
 
 # Caveats
 
-This script is in early development and is highly experimental, yet works as a charm if installed as described.
+This proxy is in early development and is highly experimental, yet works as a charm if installed as described.
 A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
 
 Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production just yet :)
@@ -27,12 +28,12 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 # Installation
 
-1. Install the proxy  according to design
+1. Install the proxy according to design
 
 		- DHCP Server <-> THIS_PROXY! <-> Relay Agent <-> DHCP Client
 		- Might work in other scenarios as well, but Ye Might Also Be Fecked!
 
-2. Make sure git, python, pip and virtualenv are installed on the platform of choice
+2. Make sure git, python, pip and optionally virtualenv are installed on the platform of choice
 
 		- If not use "yum install " or "apt-get "  to fullfill these dependencies
 
@@ -42,7 +43,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 4. Clone from Github
 
-		- git clone https://github.com/bentole/dhcpProxy.git
+		- git clone [myself](https://github.com/bentole/dhcpProxy.git)
 
 5. (Optional) Create a virtual environment to run the app
 
