@@ -54,6 +54,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 		- source ENVDIR/bin/activate
 		
 7. Create a file named settings.py and put it in the same directory as dhcpProxy.py
+   See Settings below
 
 		- vi settings.py or nano settings.py or whatever
 
