@@ -33,9 +33,15 @@ short time solution
 
 6. (Optional) Start the virtual environment
 		- source ENVDIR/bin/activate
+		
+7. Change the variables on top of the script according to your setup
+		- vi dhcpProyx.py or nano dhcpProxy.py or whatever
 
 7. Start the proxy
 		- python ./dhcpProxy.py
+		
+8. Change the relay information from pointing towards the dhcp server to point towards the proxy:
+		- For Cisco routers : ip helper-address proxy_addr
 
 8. Good luck, Chuck!
 
