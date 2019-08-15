@@ -36,10 +36,14 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 
 	if opt82action and p_tracker[pkt[BOOTP].xid]["opt82"]:
 		if 'delete' in opt82action:
-			log(opt82_found_msg.format(status=delete_dhcp_option(pkt, opt82)), pkt=pkt)
+			log(opt82_found_msg.format(status=delete_dhcp_option(pkt, 
+									     opt82)), 
+			    						     pkt=pkt)
 
 		elif 'insert' in opt82action:
-			log(opt82_reinsert_msg.format(status=set_dhcp_option(pkt, opt82, p_tracker[pkt[BOOTP].xid]["opt82"])), pkt=pkt)
+			log(opt82_reinsert_msg.format(status=set_dhcp_option(pkt, opt82, 
+									     p_tracker[pkt[BOOTP].xid]["opt82"])), 
+			    						     pkt=pkt)
 	else:
 		if pkt[BOOTP].op == 1: log(no_opt82_msg, pkt=pkt)
 
@@ -117,7 +121,8 @@ def pkt_receiver(pkt, p_tracker):
 			else:
 				log(unknown_pkt_msg, pkt=pkt)
 		else:
-			log("WTF is this packet doing here : {} -> {}".format(pkt[IP].src,pkt[IP].dst))
+			log("WTF is this packet doing here : {} -> {}".format(pkt[IP].src,
+									      pkt[IP].dst))
 
 def tracker_cleanup():
 	for xid, value in p_tracker.items():
@@ -133,7 +138,9 @@ def log(msg, pkt=None):
 
 if __name__=='__main__':
 	try:
-		t = AsyncSniffer(iface=s.INT,filter=filter, prn=lambda pkt: pkt_receiver(pkt, p_tracker))
+		t = AsyncSniffer(iface=s.INT,
+				 filter=filter, 
+				 prn=lambda pkt: pkt_receiver(pkt, p_tracker))
 		t.start()
 		print "Status: Ready"
 		while True:
