@@ -51,14 +51,14 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 		- vi dhcpProyx.py or nano dhcpProxy.py or whatever
 
-7. Start the proxy
+8. Start the proxy
 
 		- python ./dhcpProxy.py
 		
-8. Change the relay information from pointing towards the dhcp server to point towards the proxy
+9. Change the relay information from pointing towards the dhcp server to point towards the proxy
 
 		- For Cisco routers : ip helper-address proxy_addr
 
-8. Good luck, Chuck!
+10. Good luck, Chuck!
 
 
