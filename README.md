@@ -3,19 +3,19 @@ DHCP Proxy For Deleting and Inserting Relayed Option 82 information
 
 # About
 
-In environments where option 82 is required, the DHCP server must support this option by 
+In environments like Cisco SD Access where option 82 is required, the DHCP server must support this option by 
 returning this information in its offer. If this is omitted the reply will never get back
 to the client as long as the design requires option 82.
 
 This proxy provides a fix by stripping the option 82 information in the request and
-re-inserting it in the offer, meaning the server is oblivious about this information.
+re-inserting it in the offer, meaning the server is oblivious of this information.
 
-The long time solution is to use a DHCP server that supports this option, but this proxy is feasable
-short time solution
+The long time solution is to use a DHCP server that supports this option like Windows 2012 DHCP, but 
+this proxy is a feasable short time solution
 
 # Caveats
 
-This script is in early development and is high experimental, yet works as a charm if installed as described.
+This script is in early development and is highly experimental, yet works as a charm if installed as described.
 A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
 
 Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production just yet :)
@@ -49,7 +49,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 		
 7. Create a file named settings.py and put it in the same directory as dhcpProxy.py
 
-		- vi dhcpProyx.py or nano dhcpProxy.py or whatever
+		- vi settings.py or nano settings.py or whatever
 
 8. Start the proxy
 
