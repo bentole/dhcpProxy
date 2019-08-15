@@ -69,24 +69,24 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 # Settings
 
-#### the listener interface for the proxy
+####\# the listener interface for the proxy
 INT = 'ifname' 
 
-#### ip address of the listener interface
+####\# ip address of the listener interface
 INT_IP = '10.x.x.x' 
 
-#### mac address of the listener interface
+####\# mac address of the listener interface
 INT_MAC = '00:01:02:03:04:05' 
 
-#### mac address of the default gateway OR dhcp server if on same subnet..
+####\# mac address of the default gateway OR dhcp server if on same subnet..
 GW_MAC = 'aa:aa:bb:bb:cc:dd'	
 
-#### ip address of the dhcp server
+####\# ip address of the dhcp server
 DHCP_SRV = '10.x.x.x' 
 
-#### ip address of the relay agent
+####\# ip address of the relay agent
 RELAY_AGENT = '10.x.x.x' 
 
-#### 'Print messages during processing'
+####\# 'Print messages during processing'
 VERBOSE = True 
 
