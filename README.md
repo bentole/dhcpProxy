@@ -69,6 +69,8 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 # Settings
 
+Copy & paste the below content and save it to settings.py. Just make sure it's placed in the same directory as the main scriptfile.
+
 ```
 # the listener interface for the proxy
 INT = 'ifname' 
