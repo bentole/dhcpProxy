@@ -1,7 +1,7 @@
 # DHCP PROXY
 DHCP Proxy For Deleting and Inserting Relayed Option 82 information
 
-# ABOUT
+# About
 
 In environments where option 82 is needed, the DHCP server must support this option as well, by 
 returning this information in its offer. If this is omitted the reply will never get back
