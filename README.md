@@ -13,6 +13,13 @@ re-inserting it in the offer, meaning the server is oblivious about this informa
 The long time solution is to use a DHCP server that supports this option, but this proxy is feasable
 short time solution
 
+# Caveats
+
+This script is in early development and is high experimental, yet works as a charm if installed as described.
+A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
+
+Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into a production environment just yet :)
+
 # Installation
 
 1. Install the proxy  according to design
@@ -37,16 +44,6 @@ short time solution
 		- virtualenv ENVDIR 
 
 6. (Optional) Start the virtual environment
-
-# Caveats
-
-This script is in early development and is high experimental, yet works as a charm if installed as described.
-A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
-
-Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into a production environment just yet :)
-
-
-
 
 		- source ENVDIR/bin/activate
 		
