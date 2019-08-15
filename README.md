@@ -16,7 +16,7 @@ this proxy is a feasable short time solution
 
 This proxy can be used to manipulate other options as well, yet as of now it's only for option 82.
 Open an [issue](https://github.com/bentole/dhcpProxy/issues) if you have any thoughts or ideas on how to 
-furthere utilize or improve this proxy
+further utilize or improve this proxy
 
 # Caveats
 
