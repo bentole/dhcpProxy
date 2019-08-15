@@ -43,7 +43,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 4. Clone from Github
 
-		- git clone [myself](https://github.com/bentole/dhcpProxy.git)
+		- git clone https://github.com/bentole/dhcpProxy.git
 
 5. (Optional) Create a virtual environment to run the app
 
