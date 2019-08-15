@@ -47,7 +47,7 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 		- source ENVDIR/bin/activate
 		
-7. Change the variables on top of the script according to your setup
+7. Create a file named settings.py
 
 		- vi dhcpProyx.py or nano dhcpProxy.py or whatever
 
@@ -61,4 +61,26 @@ Another caveat is that there is little to none fault handling so if it catches a
 
 8. Good luck, Chuck!
 
+# Settings
+
+# the listener interface for the proxy
+INT = 'ens224' 
+
+# ip address of the listener interface
+INT_IP = '10.209.0.2' 
+
+# mac address of the listener interface
+INT_MAC = '00:0c:29:53:60:a8' 
+
+# mac address of the default gateway OR dhcp server if on same subnet..
+GW_MAC = '70:0f:6a:b3:f7:3f'	
+
+# ip address of the dhcp server
+DHCP_SRV = '10.210.6.32' 
+
+# ip address of the relay agent
+RELAY_AGENT = '10.209.8.1' 
+
+# 'Print messages during processing'
+VERBOSE = True 
 
