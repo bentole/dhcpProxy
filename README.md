@@ -5,13 +5,13 @@ DHCP Proxy For Deleting and Inserting Relayed Option 82 information
 # About
 
 In environments like Cisco SD Access or Cisco ACI where option 82 is required, the DHCP server must support this by 
-returning this information in its replies. If this is omitted the packets will never get back
+returning option 82 in its replies. If this is omitted the packets will never get back
 to the client if the design relies on it.
 
 This proxy provides a fix by stripping the option 82 information in the request and
 re-inserting it in the offer, meaning the server is oblivious of this information.
 
-The long time solution is to use a DHCP server that supports this, but 
+The long time solution is to use a DHCP server that supports option 82, but 
 this proxy is a feasable short time solution
 
 This proxy can be used to manipulate other options as well, yet as of now it's only for option 82.
@@ -21,9 +21,7 @@ further utilize or improve this proxy
 # Caveats
 
 This proxy is in early development and is highly experimental, yet works as a charm if installed as described.
-A major current caveat is that this initial version only supports ONE relay agent. Currently working on this.
-
-Another caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production just yet :)
+A current major caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production just yet :)
 
 
 # Installation
@@ -79,27 +77,27 @@ LOGFILE = '/var/log/dhcpproxy.log' # Make sure this is placed in the correct log
 1. Edit dhcpproxy.service and make sure that the file paths are correct
 2. Put dhcpproxy.service file in the correct systemd folder
 
-	- On Centos: /usr/lib/systemd/system
-	- On Ubuntu: /etc/systemd/system
-	- Might be other locations as well, you'll figure it out.
+		On Centos: /usr/lib/systemd/system
+		On Ubuntu: /etc/systemd/system
+		Might be other locations as well, you'll figure it out.
 	
 3. Reload systemd to read the new service file
 
-	- sudo systemctl daemon-reload
+		sudo systemctl daemon-reload
 	
 4. Start the service
 
-	- sudo systemctl start dhcpproxy
+		sudo systemctl start dhcpproxy
 	
 5. Check status or stop
 
-	- sudo systemctl status dhcpproxy
-	- sudo systemctl stop dhcpproxy
+		sudo systemctl status dhcpproxy
+		sudo systemctl stop dhcpproxy
 	
 6. Enable at startup
 
-	- sudo systemctl enable dhcpproxy
+		sudo systemctl enable dhcpproxy
 	
 7. Puh, Done! Now tail the logfile to see what's going on
 
-	- tail -f /var/log/dhcpproxy.log
+		tail -f /var/log/dhcpproxy.log
