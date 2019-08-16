@@ -11,7 +11,7 @@ p_tracker = {}
 discover_msg = "Discover from {ra}. Relaying to {dhcpsrv}"
 offer_msg =    "Offer from {ra}. Relaying to {dhcpsrv}"
 unknown_pkt_msg =  "Irrelevant DHCP pkt received, but that's ok"
-no_opt82_msg = "No option 82 found in DHCP header! No worries!"
+no_opt82_msg = "No option 82 found in DHCP header! Should it?"
 opt82_found_msg = "Found option 82! Deleting! Status: {status}"
 opt82_reinsert_msg = "Re-inserting option 82! Status: {status}"
 err_xid_notfound = "Transaction ID not found!"
@@ -38,13 +38,6 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 	pkt[UDP].chksum = None
 	pkt[BOOTP].giaddr = giaddr	
 
-	d = { 'delete': opt82_found_msg.format(status=delete_dhcp_option(pkt,
-                                                                             opt82)),
-                                                                             pkt=pkt),
-	      'insert': opt82_reinsert_msg.format(status=set_dhcp_option(pkt, opt82,
-                                                                             p_tracker[pkt[BOOTP].xid]["opt82"])),
-                                                                             pkt=pkt)
-	}
 	if opt82action and p_tracker[pkt[BOOTP].xid]["opt82"]:
 		if 'delete' in opt82action:
 			log(opt82_found_msg.format(status=delete_dhcp_option(pkt, 
