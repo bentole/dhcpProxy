@@ -8,8 +8,8 @@ listener = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 listener.bind(('0.0.0.0', 67))
 
 p_tracker = {}
-discover_msg = "Discover from {}. Relaying to {}".format(s.RELAY_AGENT, s.DHCP_SRV)
-offer_msg =    "Offer from {}. Relaying to {}".format(s.DHCP_SRV, s.RELAY_AGENT)
+discover_msg = "Discover from {ra}. Relaying to {dhcpsrv}"
+offer_msg =    "Offer from {ra}. Relaying to {dhcpsrv}"
 unknown_pkt_msg =  "Irrelevant DHCP pkt received, but that's ok"
 no_opt82_msg = "No option 82 found in DHCP header! No worries!"
 opt82_found_msg = "Found option 82! Deleting! Status: {status}"
@@ -17,13 +17,19 @@ opt82_reinsert_msg = "Re-inserting option 82! Status: {status}"
 err_xid_notfound = "Transaction ID not found!"
 
 opt82 = 'relay_agent_Information'
-msg_type = 'message-type'
+opt_msg_type = 'message-type'
+opt_vendor_class_id = 'vendor_class_id'
 
+'''
 filter = 'not ip broadcast \
 	  and (ip src {} \
 	   or ip src {}) \
 	  and (udp port 67 or udp port 68) \
 	  and not ip src {}'.format(s.RELAY_AGENT, s.DHCP_SRV, s.INT_IP)
+'''
+filter = 'not ip broadcast \
+	  and (udp port 67 or udp port 68) \
+	  and not ip src {}'.format(s.INT_IP)
 
 def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 	pkt[IP].src = s.INT_IP
@@ -79,24 +85,25 @@ def __dhcp_option(pkt, option_key, action):
 				return "err: {}".format(e)
 		
 def is_request(pkt):
-	return s.RELAY_AGENT in pkt[IP].src \
-	and pkt[BOOTP].op == 1 \
-	and get_dhcp_option(pkt, msg_type) == 1
+	return pkt[BOOTP].op == 1 \
+	and get_dhcp_option(pkt, opt_msg_type) == 1 \
+	and 'PXEClient' in get_dhcp_option(pkt, opt_vendor_class_id)
 
 def is_offer(pkt):
 	return s.DHCP_SRV in pkt[IP].src \
 	and pkt[BOOTP].op == 2 \
-	and get_dhcp_option(pkt, msg_type) == 2
+	and get_dhcp_option(pkt, opt_msg_type) == 2
 
 def pkt_receiver(pkt, p_tracker):
 		if BOOTP in pkt:
 			if is_request(pkt):
-				log(discover_msg, pkt=pkt)
 				p_tracker[pkt[BOOTP].xid] = { 
 				 'giaddr': pkt[BOOTP].giaddr,	
 				 'timestamp': time.time(),
 				 'opt82': get_dhcp_option(pkt, opt82),
 				}
+				relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
+				log(discover_msg.format(ra=relay_agent, dhcpsrv=s.DHCP_SRV), pkt=pkt)
 				fwd_pkt = change_pkt_info(pkt.copy(),
 								dip=s.DHCP_SRV,
 								giaddr=s.INT_IP,
@@ -104,16 +111,16 @@ def pkt_receiver(pkt, p_tracker):
 				send(fwd_pkt, iface=s.INT, verbose=False)
 
 			elif is_offer(pkt):
-				log(offer_msg, pkt=pkt)
 				if pkt[BOOTP].xid in p_tracker:
-					#s.RELAY_AGENT = p_tracker[pkt[BOOTP].xid]['giaddr']
+					relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
 					orig_opt82 = p_tracker[pkt[BOOTP].xid]['opt82']
 
 				else:
 					log(err_xid_notfound)
+				log(offer_msg.format(ra=relay_agent, dhcpsrv=s.DHCP_SRV), pkt=pkt)
 				fwd_pkt = change_pkt_info(pkt.copy(),
-								dip=s.RELAY_AGENT,
-								giaddr=s.RELAY_AGENT,
+								dip=relay_agent,
+								giaddr=relay_agent,
 								opt82action='insert')
 				send(fwd_pkt, iface=s.INT, verbose=False)
 			else:
