@@ -40,34 +40,24 @@ Another caveat is that there is little to none fault handling so if it catches a
 3. Install scapy. Fret not, Scapy is a well-known packet manipulator used by Cisco Systems among others
 
 		pip install scapy
-		Oh this needs to be done after step 6 if using virtualenv.
 		
-
 4. Clone from Github
 
 		git clone https://github.com/bentole/dhcpProxy.git
 
-5. (Optional) Create a virtual environment to run the app
-
-		virtualenv ENVDIR 
-
-6. (Optional) Start the virtual environment
-
-		source ENVDIR/bin/activate
-		
-7. Create a file named settings.py and put it in the same directory as dhcpProxy.py. See Settings below
+5. Create a file named settings.py and put it in the same directory as dhcpProxy.py. See Settings below
 
 		vi settings.py or nano settings.py or whatever
 
-8. Start the proxy
+6. Start the proxy
 
 		python ./dhcpProxy.py
 		
-9. Change the relay information from pointing towards the dhcp server to point towards the proxy
+7. Change the relay information from pointing towards the dhcp server to point towards the proxy
 
 		For Cisco routers : ip helper-address proxy_addr
 
-10. Good luck, Chuck!
+8. Good luck, Chuck!
 
 # Settings
 
@@ -77,9 +67,37 @@ Copy & paste the below content and save it to settings.py. Just make sure it's p
 # the listener interface for the proxy
 INT = 'ifname' 
 # ip address of the listener interface
-INT_IP = '10.x.x.x' 
-# mac address of the listener interface
-DHCP_SRV = '10.x.x.x' 
-# 'Print messages during processing'
-VERBOSE = True 
+INT_IP = 'w.x.y.z' 
+# ip address of the dhcp server
+DHCP_SRV = 'w.x.y.z' 
+# Log to the specified file or set to False for no logging
+VERBOSE = True
+LOGFILE = '/var/log/dhcpproxy.log' # Make sure this is placed in the correct logfolder
 ```
+# Install as service
+
+1. Edit dhcpproxy.service and make sure that the file paths are correct
+2. Put dhcpproxy.service file in the correct systemd folder
+	On Centos: /usr/lib/systemd/system
+	On Ubuntu: /etc/systemd/system
+	Might be other locations as well, you'll figure it out.
+3. Reload systemd to read the new service file
+
+	sudo systemctl daemon-reload
+	
+4. Start the service
+
+	sudo systemctl start dhcpproxy
+	
+5. Check status or stop
+
+	sudo systemctl status dhcpproxy
+	sudo systemctl stop dhcpproxy
+	
+6. Enable at startup
+
+	sudo systemctl enable dhcpproxy
+	
+7. Puh, Done! Now tail the logfile to see what's going on
+
+	tail -f /var/log/dhcpproxy.log
