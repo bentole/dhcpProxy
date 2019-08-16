@@ -78,26 +78,28 @@ LOGFILE = '/var/log/dhcpproxy.log' # Make sure this is placed in the correct log
 
 1. Edit dhcpproxy.service and make sure that the file paths are correct
 2. Put dhcpproxy.service file in the correct systemd folder
-	On Centos: /usr/lib/systemd/system
-	On Ubuntu: /etc/systemd/system
-	Might be other locations as well, you'll figure it out.
+
+	-On Centos: /usr/lib/systemd/system
+	-On Ubuntu: /etc/systemd/system
+	-Might be other locations as well, you'll figure it out.
+	
 3. Reload systemd to read the new service file
 
-	sudo systemctl daemon-reload
+	-sudo systemctl daemon-reload
 	
 4. Start the service
 
-	sudo systemctl start dhcpproxy
+	-sudo systemctl start dhcpproxy
 	
 5. Check status or stop
 
-	sudo systemctl status dhcpproxy
-	sudo systemctl stop dhcpproxy
+	-sudo systemctl status dhcpproxy
+	-sudo systemctl stop dhcpproxy
 	
 6. Enable at startup
 
-	sudo systemctl enable dhcpproxy
+	-sudo systemctl enable dhcpproxy
 	
 7. Puh, Done! Now tail the logfile to see what's going on
 
-	tail -f /var/log/dhcpproxy.log
+	-tail -f /var/log/dhcpproxy.log
