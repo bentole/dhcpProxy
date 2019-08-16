@@ -26,8 +26,6 @@ filter = 'not ip broadcast \
 	  and not ip src {}'.format(s.RELAY_AGENT, s.DHCP_SRV, s.INT_IP)
 
 def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
-	pkt[Ether].src = s.INT_MAC
-	pkt[Ether].dst = s.GW_MAC
 	pkt[IP].src = s.INT_IP
 	pkt[IP].dst = dip
 	pkt[IP].chksum = None
@@ -50,7 +48,7 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 	pkt[UDP].len = len(pkt[UDP])
 	pkt[IP].len = len(pkt[IP])
 
-	return pkt
+	return pkt[IP]
 
 def set_dhcp_option(pkt, option_key, new_value):
 	try:
@@ -103,7 +101,7 @@ def pkt_receiver(pkt, p_tracker):
 								dip=s.DHCP_SRV,
 								giaddr=s.INT_IP,
 								opt82action='delete')
-				sendp(fwd_pkt, iface=s.INT, verbose=False)
+				send(fwd_pkt, iface=s.INT, verbose=False)
 
 			elif is_offer(pkt):
 				log(offer_msg, pkt=pkt)
@@ -117,7 +115,7 @@ def pkt_receiver(pkt, p_tracker):
 								dip=s.RELAY_AGENT,
 								giaddr=s.RELAY_AGENT,
 								opt82action='insert')
-				sendp(fwd_pkt, iface=s.INT, verbose=False)
+				send(fwd_pkt, iface=s.INT, verbose=False)
 			else:
 				log(unknown_pkt_msg, pkt=pkt)
 		else:
