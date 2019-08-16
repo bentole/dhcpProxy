@@ -20,13 +20,6 @@ opt82 = 'relay_agent_Information'
 opt_msg_type = 'message-type'
 opt_vendor_class_id = 'vendor_class_id'
 
-'''
-filter = 'not ip broadcast \
-	  and (ip src {} \
-	   or ip src {}) \
-	  and (udp port 67 or udp port 68) \
-	  and not ip src {}'.format(s.RELAY_AGENT, s.DHCP_SRV, s.INT_IP)
-'''
 filter = 'not ip broadcast \
 	  and (udp port 67 or udp port 68) \
 	  and not ip src {}'.format(s.INT_IP)
