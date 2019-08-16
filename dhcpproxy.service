@@ -1,0 +1,12 @@
+[Unit]
+Description=DHCP Proxy For Option 82
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /opt/dhcpProxy/dhcpProxy.py
+Restart=on-abort
+
+
+[Install]
+WantedBy=multi-user.target
