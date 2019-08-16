@@ -80,8 +80,6 @@ INT = 'ifname'
 INT_IP = '10.x.x.x' 
 # mac address of the listener interface
 DHCP_SRV = '10.x.x.x' 
-# ip address of the relay agent. this dependency stupidity will be removed soon..
-RELAY_AGENT = '10.x.x.x' 
 # 'Print messages during processing'
 VERBOSE = True 
 ```

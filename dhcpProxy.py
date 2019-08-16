@@ -139,7 +139,9 @@ def log(msg, pkt=None):
 	else:
 		xid = "unknown"
 
-	if s.VERBOSE : print '{} - {} : {}'.format(time.asctime(), xid, msg)
+	if s.VERBOSE : 
+		with open(s.LOGFILE,'a') as f: 
+			f.write('{} - {} : {}\n'.format(time.asctime(), xid, msg))
 
 if __name__=='__main__':
 	try:
