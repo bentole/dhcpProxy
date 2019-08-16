@@ -21,7 +21,7 @@ further utilize or improve this proxy
 # Caveats
 
 This proxy is in early development and is highly experimental, yet works as a charm if installed as described.
-A current major caveat is that there is little to none fault handling so if it catches an unknown it will CRASH.. So don't put this into production just yet :)
+A current major caveat is that there is little to none fault handling so if it catches an unknown it will CRASH. I'm currently working on improving this.
 
 
 # Installation
