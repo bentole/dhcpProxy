@@ -32,6 +32,13 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 	pkt[UDP].chksum = None
 	pkt[BOOTP].giaddr = giaddr	
 
+	d = { (True, 'delete'): (mesg=opt82_found_msg, func=delete_dhcp_option, args=(pkt, opt82)),
+	  (True, 'insert'): (mesg=opt82_reinsert_msg, func=set_dhcp_option, args=(pkt, opt82,p_tracker[pkt[BOOTP].xid]["opt82"])),
+	}
+	d.get((opt82action and p_tracker[pkt[BOOTP].xid]["opt82"], opt82action), handle_no_opt82)()
+
+	print d
+	
 	if opt82action and p_tracker[pkt[BOOTP].xid]["opt82"]:
 		if 'delete' in opt82action:
 			log(opt82_found_msg.format(status=delete_dhcp_option(pkt, 
@@ -39,7 +46,8 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 			    						     pkt=pkt)
 
 		elif 'insert' in opt82action:
-			log(opt82_reinsert_msg.format(status=set_dhcp_option(pkt, opt82, 
+			log(opt82_reinsert_msg.format(status=set_dhcp_option(pkt, 
+									     opt82, 
 									     p_tracker[pkt[BOOTP].xid]["opt82"])), 
 			    						     pkt=pkt)
 	else:
@@ -83,6 +91,14 @@ def is_request(pkt):
 	and pkt[BOOTP].op == 1 \
 	and get_dhcp_option(pkt, opt_msg_type) == 1 \
 	and 'PXEClient' in get_dhcp_option(pkt, opt_vendor_class_id)
+	return False
+
+def is_offer(pkt):
+	return pkt[BOOTP] \
+	and s.DHCP_SRV in pkt[IP].src \
+	and pkt[BOOTP].op == 2 \
+	and get_dhcp_option(pkt, opt_msg_type) == 2
+	return False
 
 def handle_request(pkt):
 	p_tracker[pkt[BOOTP].xid] = {
@@ -118,19 +134,13 @@ def handle_unknown_bootp(pkt):
 def handle_unknown_pkt(pkt):
 	log(err_unknown_pkt, pkt=pkt)	
 
-def is_offer(pkt):
-	return pkt[BOOTP] \
-	and s.DHCP_SRV in pkt[IP].src \
-	and pkt[BOOTP].op == 2 \
-	and get_dhcp_option(pkt, opt_msg_type) == 2
 
 def pkt_receiver(pkt, p_tracker):
-	# Packet dispatcher dictionary
 	{ (True, True, False) : handle_request,
 	  (True, False, True) : handle_offer,
 	  (True, False, False) : handle_unknown_bootp,
-	}.get((pkt[BOOTP], is_request(pkt), 
-	        is_offer(pkt), handle_unknown_pkt))(pkt)
+	}.get((BOOTP in pkt, is_request(pkt), 
+	        is_offer(pkt)), handle_unknown_pkt)(pkt)
 
 def tracker_cleanup():
 	for xid, value in p_tracker.items():
