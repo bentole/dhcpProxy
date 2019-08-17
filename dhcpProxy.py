@@ -119,10 +119,10 @@ def is_offer(pkt):
 
 def pkt_receiver(pkt, p_tracker):
 		# d validates boolean in tuplet (bootp pkt, is_request pkt, is_offer pkt)
-		{ (True, True, False) : request(pkt),
-		      (True, False, True) : offer(pkt),
+		{ (True, True, False) : request,
+		      (True, False, True) : offer,
 	              (True, False, False) : log(unknown_pkt_msg, pkt=pkt),
-		}
+		}.get(pkt, log(wtf-packet)(pkt)
 
 		if BOOTP in pkt:
 			if is_request(pkt):
