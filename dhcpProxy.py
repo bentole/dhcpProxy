@@ -96,6 +96,20 @@ def request(pkt):
 					opt82action='delete')
 	send(fwd_pkt, iface=s.INT, verbose=False)
 
+def offer(pkt):
+	if pkt[BOOTP].xid in p_tracker:
+		relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
+		orig_opt82 = p_tracker[pkt[BOOTP].xid]['opt82']
+
+	else:
+		log(err_xid_notfound)
+	log(offer_msg.format(ra=relay_agent, dhcpsrv=s.DHCP_SRV), pkt=pkt)
+	fwd_pkt = change_pkt_info(pkt.copy(),
+				dip=relay_agent,
+				giaddr=relay_agent,
+				opt82action='insert')
+	send(fwd_pkt, iface=s.INT, verbose=False)
+
 def is_offer(pkt):
 	return s.DHCP_SRV in pkt[IP].src \
 	and pkt[BOOTP].op == 2 \
