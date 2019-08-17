@@ -31,27 +31,21 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
 	pkt[IP].chksum = None
 	pkt[UDP].chksum = None
 	pkt[BOOTP].giaddr = giaddr	
-
-	d = { (True, 'delete'): (mesg=opt82_found_msg, func=delete_dhcp_option, args=(pkt, opt82)),
-	  (True, 'insert'): (mesg=opt82_reinsert_msg, func=set_dhcp_option, args=(pkt, opt82,p_tracker[pkt[BOOTP].xid]["opt82"])),
-	}
-	d.get((opt82action and p_tracker[pkt[BOOTP].xid]["opt82"], opt82action), handle_no_opt82)()
-
-	print d
 	
-	if opt82action and p_tracker[pkt[BOOTP].xid]["opt82"]:
-		if 'delete' in opt82action:
-			log(opt82_found_msg.format(status=delete_dhcp_option(pkt, 
-									     opt82)), 
-			    						     pkt=pkt)
+	
+	def handle_opt82(args):
+		if args: return log(args[1].format(status=args[0](*args[2])), pkt=pkt)	
+		return log(no_opt82_msg, pkt=pkt)
 
-		elif 'insert' in opt82action:
-			log(opt82_reinsert_msg.format(status=set_dhcp_option(pkt, 
-									     opt82, 
-									     p_tracker[pkt[BOOTP].xid]["opt82"])), 
-			    						     pkt=pkt)
-	else:
-		if pkt[BOOTP].op == 1: log(no_opt82_msg, pkt=pkt)
+	d = { (True, 'delete'): (delete_dhcp_option, 
+				 opt82_found_msg, 
+				 (pkt, opt82)),
+	      (True, 'insert'): (set_dhcp_option, 
+				 opt82_reinsert_msg, 
+			         (pkt, opt82,p_tracker[pkt[BOOTP].xid]["opt82"])),
+	}
+	eval_82 = bool(opt82action and p_tracker[pkt[BOOTP].xid]["opt82"])
+	handle_opt82(d.get((eval_82, opt82action), None))
 
 	pkt[UDP].len = len(pkt[UDP])
 	pkt[IP].len = len(pkt[IP])
