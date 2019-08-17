@@ -78,7 +78,8 @@ def __dhcp_option(pkt, option_key, action):
 				return "err: {}".format(e)
 		
 def is_request(pkt):
-	return pkt[BOOTP].op == 1 \
+	return pkt[BOOTP] \
+	and pkt[BOOTP].op == 1 \
 	and get_dhcp_option(pkt, opt_msg_type) == 1 \
 	and 'PXEClient' in get_dhcp_option(pkt, opt_vendor_class_id)
 
@@ -111,7 +112,8 @@ def offer(pkt):
 	send(fwd_pkt, iface=s.INT, verbose=False)
 
 def is_offer(pkt):
-	return s.DHCP_SRV in pkt[IP].src \
+	return pkt[BOOTP] \
+	and s.DHCP_SRV in pkt[IP].src \
 	and pkt[BOOTP].op == 2 \
 	and get_dhcp_option(pkt, opt_msg_type) == 2
 
