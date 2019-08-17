@@ -10,7 +10,8 @@ listener.bind(('0.0.0.0', 67))
 p_tracker = {}
 discover_msg = "Discover from {ra}. Relaying to {dhcpsrv}"
 offer_msg =    "Offer from {ra}. Relaying to {dhcpsrv}"
-unknown_pkt_msg =  "Irrelevant DHCP pkt received, but that's ok"
+err_unknown_bootp_pkt =  "Irrelevant DHCP pkt received, but that's ok"
+err_unknown_pkt =  "Unknown pkt received. W-T-F!"
 no_opt82_msg = "No option 82 found in DHCP header! Should it?"
 opt82_found_msg = "Found option 82! Deleting! Status: {status}"
 opt82_reinsert_msg = "Re-inserting option 82! Status: {status}"
@@ -83,7 +84,7 @@ def is_request(pkt):
 	and get_dhcp_option(pkt, opt_msg_type) == 1 \
 	and 'PXEClient' in get_dhcp_option(pkt, opt_vendor_class_id)
 
-def request(pkt):
+def handle_request(pkt):
 	p_tracker[pkt[BOOTP].xid] = {
 	 'giaddr': pkt[BOOTP].giaddr,
 	 'timestamp': time.time(),
@@ -97,7 +98,7 @@ def request(pkt):
 					opt82action='delete')
 	send(fwd_pkt, iface=s.INT, verbose=False)
 
-def offer(pkt):
+def handle_offer(pkt):
 	if pkt[BOOTP].xid in p_tracker:
 		relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
 		orig_opt82 = p_tracker[pkt[BOOTP].xid]['opt82']
@@ -111,6 +112,12 @@ def offer(pkt):
 				opt82action='insert')
 	send(fwd_pkt, iface=s.INT, verbose=False)
 
+def handle_unknown_bootp(pkt):
+	log(err_unknown_bootp_pkt, pkt=pkt)
+
+def handle_unknown_pkt(pkt):
+	log(err_unknown_pkt, pkt=pkt)	
+
 def is_offer(pkt):
 	return pkt[BOOTP] \
 	and s.DHCP_SRV in pkt[IP].src \
@@ -118,45 +125,12 @@ def is_offer(pkt):
 	and get_dhcp_option(pkt, opt_msg_type) == 2
 
 def pkt_receiver(pkt, p_tracker):
-		# d validates boolean in tuplet (bootp pkt, is_request pkt, is_offer pkt)
-		{ (True, True, False) : request,
-		      (True, False, True) : offer,
-	              (True, False, False) : log(unknown_pkt_msg, pkt=pkt),
-		}.get(pkt, log(wtf-packet)(pkt)
-
-		if BOOTP in pkt:
-			if is_request(pkt):
-				p_tracker[pkt[BOOTP].xid] = { 
-				 'giaddr': pkt[BOOTP].giaddr,	
-				 'timestamp': time.time(),
-				 'opt82': get_dhcp_option(pkt, opt82),
-				}
-				relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
-				log(discover_msg.format(ra=relay_agent, dhcpsrv=s.DHCP_SRV), pkt=pkt)
-				fwd_pkt = change_pkt_info(pkt.copy(),
-								dip=s.DHCP_SRV,
-								giaddr=s.INT_IP,
-								opt82action='delete')
-				send(fwd_pkt, iface=s.INT, verbose=False)
-
-			elif is_offer(pkt):
-				if pkt[BOOTP].xid in p_tracker:
-					relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
-					orig_opt82 = p_tracker[pkt[BOOTP].xid]['opt82']
-
-				else:
-					log(err_xid_notfound)
-				log(offer_msg.format(ra=relay_agent, dhcpsrv=s.DHCP_SRV), pkt=pkt)
-				fwd_pkt = change_pkt_info(pkt.copy(),
-								dip=relay_agent,
-								giaddr=relay_agent,
-								opt82action='insert')
-				send(fwd_pkt, iface=s.INT, verbose=False)
-			else:
-				log(unknown_pkt_msg, pkt=pkt)
-		else:
-			log("WTF is this packet doing here : {} -> {}".format(pkt[IP].src,
-									      pkt[IP].dst))
+	# Packet dispatcher dictionary
+	{ (True, True, False) : handle_request,
+	  (True, False, True) : handle_offer,
+	  (True, False, False) : handle_unknown_bootp,
+	}.get((pkt[BOOTP], is_request(pkt), 
+	        is_offer(pkt), handle_unknown_pkt))(pkt)
 
 def tracker_cleanup():
 	for xid, value in p_tracker.items():
