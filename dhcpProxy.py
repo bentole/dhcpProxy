@@ -82,6 +82,20 @@ def is_request(pkt):
 	and get_dhcp_option(pkt, opt_msg_type) == 1 \
 	and 'PXEClient' in get_dhcp_option(pkt, opt_vendor_class_id)
 
+def request(pkt):
+	p_tracker[pkt[BOOTP].xid] = {
+	 'giaddr': pkt[BOOTP].giaddr,
+	 'timestamp': time.time(),
+	 'opt82': get_dhcp_option(pkt, opt82),
+	}
+	relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
+	log(discover_msg.format(ra=relay_agent, dhcpsrv=s.DHCP_SRV), pkt=pkt)
+	fwd_pkt = change_pkt_info(pkt.copy(),
+					dip=s.DHCP_SRV,
+					giaddr=s.INT_IP,
+					opt82action='delete')
+	send(fwd_pkt, iface=s.INT, verbose=False)
+
 def is_offer(pkt):
 	return s.DHCP_SRV in pkt[IP].src \
 	and pkt[BOOTP].op == 2 \
