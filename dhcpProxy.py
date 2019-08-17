@@ -1,4 +1,4 @@
-#!./bin/python
+#/usr/bin/env python
 from scapy.all import sniff, ICMP, Ether, IP, UDP, BOOTP, DHCP, sr, send, sendp, srp, AsyncSniffer
 import socket
 import time
