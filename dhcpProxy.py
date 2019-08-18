@@ -67,6 +67,10 @@ def get_dhcp_option(pkt, option_key):
 
 def __dhcp_option(pkt, option_key, action):
 	for option in pkt[DHCP].options:
+		{ 'get' : lambda x: option[1],
+		  'delete': lambda x: 'success' if pkt[DHCP].options.remove(option)
+    }.get(option_key, lambda x: 'unknown operation')
+    
 		if option_key in str(option[0]):
 			try:
 				if 'get' in action:
