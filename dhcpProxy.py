@@ -67,10 +67,10 @@ def get_dhcp_option(pkt, option_key):
 
 def __dhcp_option(pkt, option_key, action):
 	for option in pkt[DHCP].options:
-		{ 'get' : lambda x: option[1],
-		  'delete': lambda x: 'success' if pkt[DHCP].options.remove(option)
-    }.get(option_key, lambda x: 'unknown operation')
-    
+	 return { 'get' : lambda: (option[1],),
+		  'delete': lambda: ('success', pkt[DHCP].options.remove(option))
+    		}.get(option_key, lambda x: 'unknown operation')()[0]
+    		'''
 		if option_key in str(option[0]):
 			try:
 				if 'get' in action:
@@ -83,7 +83,7 @@ def __dhcp_option(pkt, option_key, action):
 
 			except Exception(e):
 				return "err: {}".format(e)
-		
+		'''
 def is_request(pkt):
 	return pkt[BOOTP] \
 	and pkt[BOOTP].op == 1 \
