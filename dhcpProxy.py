@@ -26,31 +26,29 @@ filter = 'not ip broadcast \
 	  and not ip src {}'.format(s.INT_IP)
 
 def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
-	pkt[IP].src = s.INT_IP
-	pkt[IP].dst = dip
-	pkt[IP].chksum = None
-	pkt[UDP].chksum = None
-	pkt[BOOTP].giaddr = giaddr	
-	
-	
-	def handle_opt82(args):
-		if args: return log(args[1].format(status=args[0](*args[2])), pkt=pkt)	
-		return log(no_opt82_msg, pkt=pkt)
+    pkt[IP].src = s.INT_IP
+    pkt[IP].dst = dip
+    pkt[IP].chksum = None
+    pkt[UDP].chksum = None
+    pkt[BOOTP].giaddr = giaddr	
 
-	d = { (True, 'delete'): (delete_dhcp_option, 
-				 opt82_found_msg, 
-				 (pkt, opt82)),
-	      (True, 'insert'): (set_dhcp_option, 
-				 opt82_reinsert_msg, 
-			         (pkt, opt82,p_tracker[pkt[BOOTP].xid]["opt82"])),
-	}
-	eval_82 = bool(opt82action and p_tracker[pkt[BOOTP].xid]["opt82"])
-	handle_opt82(d.get((eval_82, opt82action), None))
+    def handle_opt82(args):
+        if args: return log(args[1].format(status=args[0](*args[2])), pkt=pkt)	
+        return log(no_opt82_msg, pkt=pkt)
 
-	pkt[UDP].len = len(pkt[UDP])
-	pkt[IP].len = len(pkt[IP])
+    d = { (True, 'delete'): (delete_dhcp_option, 
+                 opt82_found_msg, 
+                 (pkt, opt82)),
+          (True, 'insert'): (set_dhcp_option, 
+                 opt82_reinsert_msg, 
+                     (pkt, opt82,p_tracker[pkt[BOOTP].xid]["opt82"])),
+    }
+    eval_82 = bool(opt82action and p_tracker[pkt[BOOTP].xid]["opt82"])
+    handle_opt82(d.get((eval_82, opt82action), None))
+    pkt[UDP].len = len(pkt[UDP])
+    pkt[IP].len = len(pkt[IP])
 
-	return pkt[IP]
+    return pkt[IP]
 
 def set_dhcp_option(pkt, option_key, new_value):
 	try:
@@ -66,36 +64,28 @@ def get_dhcp_option(pkt, option_key):
 	return __dhcp_option(pkt, option_key, 'get')
 
 def __dhcp_option(pkt, option_key, action):
-	for option in pkt[DHCP].options:
-	 return { 'get' : lambda: (option[1],),
-		  'delete': lambda: ('success', pkt[DHCP].options.remove(option))
-    		}.get(option_key, lambda x: 'unknown operation')()[0]
-    		'''
-		if option_key in str(option[0]):
-			try:
-				if 'get' in action:
-					return option[1]
-				elif 'delete' in action:
-					pkt[DHCP].options.remove(option)	
-					return "success"
-				else:
-					raise Exception("unknown operation!")
+    for option in pkt[DHCP].options:
+        if option_key in str(option[0]):
+            try:
+                d = { 'get' : lambda: (option[1],),
+                      'delete': lambda: ('success', pkt[DHCP].options.remove(option))
+                }
+                return d.get(action, lambda: ('unknown operation', ))()[0]
+            except Exception as e:
+                return "err: {}".format(e)
 
-			except Exception(e):
-				return "err: {}".format(e)
-		'''
 def is_request(pkt):
-	return pkt[BOOTP] \
-	and pkt[BOOTP].op == 1 \
-	and get_dhcp_option(pkt, opt_msg_type) == 1 \
-	and 'PXEClient' in get_dhcp_option(pkt, opt_vendor_class_id)
+	return (pkt[BOOTP]
+	and pkt[BOOTP].op == 1
+	and get_dhcp_option(pkt, opt_msg_type) == 1
+	and 'PXEClient' in get_dhcp_option(pkt, opt_vendor_class_id))
 	return False
 
 def is_offer(pkt):
-	return pkt[BOOTP] \
-	and s.DHCP_SRV in pkt[IP].src \
-	and pkt[BOOTP].op == 2 \
-	and get_dhcp_option(pkt, opt_msg_type) == 2
+	return (pkt[BOOTP]
+	and s.DHCP_SRV in pkt[IP].src
+	and pkt[BOOTP].op == 2
+	and get_dhcp_option(pkt, opt_msg_type) == 2)
 	return False
 
 def handle_request(pkt):
@@ -116,7 +106,6 @@ def handle_offer(pkt):
 	if pkt[BOOTP].xid in p_tracker:
 		relay_agent = p_tracker[pkt[BOOTP].xid]['giaddr']
 		orig_opt82 = p_tracker[pkt[BOOTP].xid]['opt82']
-
 	else:
 		log(err_xid_notfound)
 	log(offer_msg.format(ra=relay_agent, dhcpsrv=s.DHCP_SRV), pkt=pkt)
@@ -131,7 +120,6 @@ def handle_unknown_bootp(pkt):
 
 def handle_unknown_pkt(pkt):
 	log(err_unknown_pkt, pkt=pkt)	
-
 
 def pkt_receiver(pkt, p_tracker):
 	{ (True, True, False) : handle_request,
