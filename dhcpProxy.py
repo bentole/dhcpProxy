@@ -33,7 +33,9 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
     pkt[BOOTP].giaddr = giaddr	
 
     def handle_opt82(args):
-        if args: return log(args[1].format(status=args[0](*args[2])), pkt=pkt)	
+        if args: 
+            return log(args[1].format(status=args[0](*args[2])), 
+                    pkt=pkt)	
         return log(no_opt82_msg, pkt=pkt)
 
     d = { (True, 'delete'): (delete_dhcp_option, 
@@ -68,7 +70,8 @@ def __dhcp_option(pkt, option_key, action):
         if option_key in str(option[0]):
             try:
                 d = { 'get' : lambda: (option[1],),
-                      'delete': lambda: ('success', pkt[DHCP].options.remove(option))
+                      'delete': lambda: ('success', 
+                          pkt[DHCP].options.remove(option))
                 }
                 return d.get(action, lambda: ('unknown operation', ))()[0]
             except Exception as e:
@@ -142,16 +145,20 @@ def log(msg, pkt=None):
 		with open(s.LOGFILE,'a') as f: 
 			f.write('{} - {} : {}\n'.format(time.asctime(), xid, msg))
 
+def main():
+    t = AsyncSniffer(iface=s.INT,
+         filter=filter, 
+         prn=lambda pkt: pkt_receiver(pkt, p_tracker))
+    t.start()
+    log("Service started successfully") 
+    while True:
+        time.sleep(10)
+        tracker_cleanup()	
+
 if __name__=='__main__':
-	try:
-		t = AsyncSniffer(iface=s.INT,
-				 filter=filter, 
-				 prn=lambda pkt: pkt_receiver(pkt, p_tracker))
-		t.start()
-		print "Status: Ready"
-		while True:
-			time.sleep(10)
-			tracker_cleanup()	
-	except KeyboardInterrupt:
-		t.stop()
-		exit()
+    try:
+        main() 
+    except KeyboardInterrupt:
+        log("Service stopped by keyboard interrupt")
+    except Exception as e:
+        log("Service stopped. Err: {}".format(e))
