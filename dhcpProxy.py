@@ -53,11 +53,12 @@ def change_pkt_info(pkt, dip=None,giaddr=None, opt82action=None):
     return pkt[IP]
 
 def set_dhcp_option(pkt, option_key, new_value):
-	try:
-		pkt[DHCP].options.insert(0, (option_key, new_value))
-		return "success"
-	except Exception(e):
-		return "err {}".format(e)
+        endIndex = pkt[DHCP].options.index("end")
+        try:
+                pkt[DHCP].options.insert(endIndex, (option_key, new_value))
+                return "success"
+        except Exception(e):
+                return "err {}".format(e)
 
 def delete_dhcp_option(pkt, option_key):
 	return __dhcp_option(pkt, option_key, 'delete')
