@@ -6,7 +6,7 @@ DHCP Proxy For Deleting and Inserting Relayed Option 82 information
 
 In environments like Cisco SD Access or Cisco ACI where option 82 is required, the DHCP server must support this by 
 returning option 82 in its replies. If this is omitted the packets will never get back
-to the client if the design relies on it.
+to the client because the network depends on this information for correct forwarding.
 
 This proxy provides a fix by stripping the option 82 information in the request and
 re-inserting it in the offer, meaning the server is oblivious of this information.
